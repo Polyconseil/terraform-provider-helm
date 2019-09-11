@@ -37,10 +37,15 @@ require (
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/prometheus/client_golang v1.1.0 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20190327083759-54bad0a9b051 // indirect
+<<<<<<< HEAD
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect
 	github.com/soheilhy/cmux v0.1.4 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5 // indirect
 	github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2 // indirect
+=======
+	github.com/technosophos/moniker v0.0.0-20180509230615-a5dbd03a2245 // indirect
+	github.com/xlab/handysort v0.0.0-20150421192137-fb3537ed64a1 // indirect
+>>>>>>> add tillerless support by running Tiller locally
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	golang.org/x/net v0.0.0-20191002035440-2ec189313ef0 // indirect
 	golang.org/x/sys v0.0.0-20191002091554-b397fe3ad8ed // indirect

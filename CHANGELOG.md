@@ -1,4 +1,9 @@
 ## 0.10.5 (Unreleased)
+
+FEATURES:
+
+* Add *tillerless* support to run Tiller locally (#339)
+
 ## 0.10.4 (October 28, 2019)
 
 FIXES:
