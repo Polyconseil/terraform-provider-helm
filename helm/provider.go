@@ -286,30 +286,6 @@ func kubernetesResource() *schema.Resource {
 }
 
 func providerConfigure(d *schema.ResourceData, terraformVersion string) (interface{}, error) {
-	return NewMeta(d)
-}
-
-// Meta is the meta information structure for the provider
-type Meta struct {
-	Settings         *helm_env.EnvSettings
-	TLSConfig        *tls.Config
-	K8sClient        kubernetes.Interface
-	K8sConfig        *rest.Config
-	Tunnel           *kube.Tunnel
-	RootServer       *grpc.Server
-	TillerEnv        *tiller_env.Environment
-	TillerK8sClient  *kube.Client
-	TillerK8sConfig  *genericclioptions.ConfigFlags
-	DefaultNamespace string
-
-	data *schema.ResourceData
-
-	// Mutex used for lock the Tiller installation and Tunnel creation.
-	sync.Mutex
-}
-
-// NewMeta will construct a new Meta from the provided ResourceData
-func NewMeta(d *schema.ResourceData) (*Meta, error) {
 	m := &Meta{data: d}
 	m.buildSettings(m.data)
 
@@ -329,9 +305,26 @@ func NewMeta(d *schema.ResourceData) (*Meta, error) {
 		return nil, err
 	}
 
-	m.TillerEnv = tiller_env.New()
-
 	return m, nil
+}
+
+// Meta is the meta information structure for the provider
+type Meta struct {
+	Settings         *helm_env.EnvSettings
+	TLSConfig        *tls.Config
+	K8sClient        kubernetes.Interface
+	K8sConfig        *rest.Config
+	Tunnel           *kube.Tunnel
+	RootServer       *grpc.Server
+	TillerEnv        *tiller_env.Environment
+	TillerK8sClient  *kube.Client
+	TillerK8sConfig  *genericclioptions.ConfigFlags
+	DefaultNamespace string
+
+	data *schema.ResourceData
+
+	// Mutex used for lock the Tiller installation and Tunnel creation.
+	sync.Mutex
 }
 
 func (m *Meta) buildSettings(d *schema.ResourceData) {
@@ -396,6 +389,10 @@ func (m *Meta) buildK8sClient(d *schema.ResourceData, terraformVersion string) e
 }
 
 func (m *Meta) buildTillerK8sClient(d *schema.ResourceData) error {
+	if ok, _ := isLocalAddress(m.Settings.TillerHost); !ok {
+		return fmt.Errorf("Tiller host %s is not a local address", m.Settings.TillerHost)
+	}
+
 	tillerK8sConfig := genericclioptions.NewConfigFlags(true)
 
 	if !k8sGet(d, "in_cluster").(bool) && k8sGet(d, "load_config_file").(bool) {
@@ -406,10 +403,11 @@ func (m *Meta) buildTillerK8sClient(d *schema.ResourceData) error {
 
 		context := k8sGet(d, "config_context").(string)
 		if context != "" {
-			*tillerK8sConfig.Context = context
+			*tillerK8sConfig.Context = "" // context
 		}
 
-		*tillerK8sConfig.KubeConfig = explicitPath
+		debug("Load kubeconfig from %s", explicitPath)
+		*tillerK8sConfig.KubeConfig = "" // explicitPath
 	}
 
 	if v, ok := k8sGetOk(d, "host"); ok {
@@ -435,6 +433,7 @@ func (m *Meta) buildTillerK8sClient(d *schema.ResourceData) error {
 		*tillerK8sConfig.CAFile = caFile
 	}
 
+	m.TillerEnv = tiller_env.New()
 	m.TillerK8sConfig = tillerK8sConfig
 	m.TillerK8sClient = kube.New(tillerK8sConfig)
 
@@ -739,8 +738,6 @@ func (m *Meta) runLocalTillerIfNeeded(d *schema.ResourceData) error {
 		return nil
 	}
 
-	defer m.cleanTempFiles()
-
 	var (
 		store                   = d.Get("tillerless_storage").(string)
 		tillerlessTlsKeyFile    = d.Get("tillerless_tls_key").(string)
@@ -848,6 +845,27 @@ func writeTempFile(content []byte) (string, error) {
 
 func (m *Meta) cleanTempFiles() {
 	os.Remove(*m.TillerK8sConfig.CAFile)
+}
+
+func isLocalAddress(hostport string) (bool, error) {
+	host, _, err := net.SplitHostPort(hostport)
+	if err != nil {
+		return false, err
+	}
+
+	ips, err := net.LookupIP(host)
+	if err != nil {
+		return false, err
+	}
+
+	ipStr := ips[0].String()
+	ip := net.ParseIP(ipStr)
+
+	if ip != nil {
+		return ip.IsLoopback(), nil
+	}
+
+	return false, fmt.Errorf("%s is not a valid textual representation of an IP address", ipStr)
 }
 
 var (

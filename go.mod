@@ -37,15 +37,11 @@ require (
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/prometheus/client_golang v1.1.0 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20190327083759-54bad0a9b051 // indirect
-<<<<<<< HEAD
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect
 	github.com/soheilhy/cmux v0.1.4 // indirect
+	github.com/technosophos/moniker v0.0.0-20180509230615-a5dbd03a2245 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5 // indirect
 	github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2 // indirect
-=======
-	github.com/technosophos/moniker v0.0.0-20180509230615-a5dbd03a2245 // indirect
-	github.com/xlab/handysort v0.0.0-20150421192137-fb3537ed64a1 // indirect
->>>>>>> add tillerless support by running Tiller locally
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	golang.org/x/net v0.0.0-20191002035440-2ec189313ef0 // indirect
 	golang.org/x/sys v0.0.0-20191002091554-b397fe3ad8ed // indirect
@@ -54,32 +50,14 @@ require (
 	gopkg.in/gorp.v1 v1.7.2 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/square/go-jose.v2 v2.3.1 // indirect
-<<<<<<< HEAD
 	gopkg.in/yaml.v2 v2.2.4
 	k8s.io/apimachinery v0.0.0
+	k8s.io/cli-runtime v0.0.0
 	k8s.io/client-go v0.0.0
 	k8s.io/helm v2.15.1+incompatible
 	k8s.io/klog v1.0.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20190918143330-0270cf2f1c1d // indirect
 	k8s.io/kubernetes v1.15.5 // indirect
-=======
-	gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0
-	gotest.tools v2.2.0+incompatible // indirect
-	k8s.io/api v0.0.0-20190409021203-6e4e0e4f393b // indirect
-	k8s.io/apiextensions-apiserver v0.0.0-20190409022649-727a075fdec8 // indirect
-	k8s.io/apimachinery v0.0.0-20190404173353-6a84e37a896d
-	k8s.io/apiserver v0.0.0-20190409021813-1ec86e4da56c // indirect
-	k8s.io/cli-runtime v0.0.0-20190409023024-d644b00f3b79
-	k8s.io/client-go v11.0.0+incompatible
-	k8s.io/cloud-provider v0.0.0-20190409023720-1bc0c81fa51d // indirect
-	k8s.io/helm v2.14.3+incompatible
-	k8s.io/klog v0.3.0 // indirect
-	k8s.io/kube-openapi v0.0.0-20190228160746-b3a7cee44a30 // indirect
-	k8s.io/kubernetes v1.14.1 // indirect
-	k8s.io/utils v0.0.0-20190308190857-21c4ce38f2a7 // indirect
-	sigs.k8s.io/kustomize v2.0.3+incompatible // indirect
-	sigs.k8s.io/yaml v1.1.0 // indirect
->>>>>>> run Tiller with kubernetes creds
 	vbom.ml/util v0.0.0-20180919145318-efcd4e0f9787 // indirect
 )
 
